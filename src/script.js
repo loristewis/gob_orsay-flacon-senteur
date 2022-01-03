@@ -28,6 +28,8 @@ const drawCanvas = document.querySelector("canvas.draw-canvas");
 drawCanvas.width = window.innerWidth;
 drawCanvas.height = window.innerHeight;
 const ctx = drawCanvas.getContext("2d");
+const transformX = drawCanvas.width / 2 - 260
+const transformY = drawCanvas.height / 2 - 260
 
 const circlePath = `M270.11,0C120.93,0,0,120.93,0,270.11S120.93,540.22,270.11,540.22,540.22,419.29,540.22,270.11,419.29,0,270.11,0Zm.45,497.11c-125.36,0-227-101.63-227-227s101.64-227,227-227c125.37,0,227,101.63,227,227S395.93,497.11,270.56,497.11Z`;
 
@@ -38,7 +40,7 @@ const figure = new Path2D(circlePath);
 ctx.save();
 ctx.strokeStyle = "red";
 ctx.fillStyle = "green";
-// ctx.translate(drawCanvas.width / 2 - 260, drawCanvas.height / 2 - 260);
+ctx.translate(transformX, transformY);
 // ctx.translate(500, 500);
 ctx.fill(figure);
 console.log(ctx.getTransform());
@@ -56,7 +58,6 @@ let currentPos = {
   y: 0,
 };
 let colorProgress = 0;
-
 document.addEventListener("mousedown", start);
 document.addEventListener("mouseup", stop);
 // window.addEventListener("resize", resize);
@@ -68,8 +69,10 @@ document.addEventListener("mouseup", stop);
 //   ctx.canvas.height = window.innerHeight;
 // }
 function reposition(event) {
-  coord.x = event.clientX;
-  coord.y = event.clientY;
+  const { clientX, clientY } = event;
+  console.log(clientX, transformX);
+  coord.x = clientX - transformX;
+  coord.y = clientY + transformY;
 }
 function start(event) {
   reposition(event);
@@ -81,10 +84,13 @@ function stop() {
 
 function draw(event) {
   let { clientX, clientY } = event;
-  // clientX = clientX - (drawCanvas.width / 2 - 260);
-  // clientY = clientY + (drawCanvas.height / 2 - 260)
+  
+  clientX = clientX - (drawCanvas.width / 2 - 260);
+  clientY = clientY + (drawCanvas.height / 2 - 260)
   // console.log(clientX, clientY);
-  if (ctx.isPointInPath(figure, coord.x, clientY)) {
+  console.log(coord.x, coord.y);
+  if (ctx.isPointInPath(figure, coord.x, coord.y)) {
+    console.log("true");
     // ctx.save();
     // ctx.translate(drawCanvas.width / 2 - 260, drawCanvas.height / 2 - 260);
 
