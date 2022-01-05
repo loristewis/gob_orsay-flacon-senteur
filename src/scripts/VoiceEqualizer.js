@@ -90,16 +90,7 @@ class VoiceEqualizer {
       const bar_pos = i * 4;
       const bar_width = 2;
       const bar_height = Math.max(Math.pow(fbc_array[i], 2) * 0.0015, 5);
-      // console.log(bar_height);
       this.ctx.beginPath();
-
-      // this.ctx.arc(
-      //   this.canvas.width / 2 + Math.cos(angle) * this.circleRadius,
-      //   this.canvas.height / 2 + Math.sin(angle) * this.circleRadius,
-      //   1,
-      //   0,
-      //   2 * Math.PI
-      // );
 
       //EQ line
       const startX =
@@ -110,16 +101,13 @@ class VoiceEqualizer {
       const endX =
         centerX +
         Math.cos(angle) * (this.circleRadius + this.offsetEq + bar_height);
-      // this.canvas.width / 2 + Math.cos(angle) * (this.circleRadius + 10);
       const endY =
         centerY +
         Math.sin(angle) * (this.circleRadius + this.offsetEq + bar_height);
 
       this.ctx.moveTo(startX, startY);
       this.ctx.lineTo(endX, endY);
-      // this.ctx.lineTo(centerX, centerY);
 
-      // this.ctx.fillStyle = "red";
       this.ctx.lineWidth = 5;
       this.ctx.lineCap = "round";
 
@@ -130,18 +118,9 @@ class VoiceEqualizer {
       const particleX =
         centerX +
         Math.cos(angle) * (this.circleRadius + this.offsetEq * 3 + bar_height);
-      // this.canvas.width / 2 + Math.cos(angle) * (this.circleRadius + 10);
       const particleY =
         centerY +
         Math.sin(angle) * (this.circleRadius + this.offsetEq * 3 + bar_height);
-      // if (this.particlesState[i]) console.log(this.particlesState[i][0]);
-
-      // console.log(
-      //   bar_height > 50,
-      //   bar_height,
-      //   bar_height > 50 &&
-      //     (this.particlesState[i] === undefined || !this.particlesState[i][0])
-      // );
 
       if (
         this.particlesState[i] !== undefined &&
@@ -168,22 +147,15 @@ class VoiceEqualizer {
           centerX,
           centerY
         );
-        // console.log("new", this.particlesState[i]);
 
         // const particle = new Particles(this.ctx, particleX, particleY);
         particle.initNew();
 
         this.particlesState[i] = [true, particle, 0];
-        // console.log("new");
-        // this.particlesState.push([true, particle, 0]);
       }
 
       this.testCounter += 0.0001;
-      // console.log(this.testCounter % 3 <= 0.01);
       this.oldVoiceLvl = bar_height;
-
-      // if (i == 0)
-      // console.log(this.canvas.height, this.canvas.height - bar_height);
 
       // this.ctx.beginPath();
       // this.ctx.lineWidth = bar_width;
