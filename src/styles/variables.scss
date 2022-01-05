@@ -1,0 +1,69 @@
+$blue: #1D272E;
+$paper: #F2EFEB;
+$gold: #BBA17E;
+
+$bagerich: Bagerich, serif;
+
+@mixin bagerich {
+  font-family: $bagerich;
+}
+
+$font-size-h1: 3.813rem;
+$font-size-h2: 3.063rem;
+$font-size-h3: 2.438rem;
+$font-size-h4: 1.938rem;
+$font-size-p: 1.563rem;
+$font-size-button: 1rem;
+
+@mixin H1 {
+  font-size: $font-size-h1;
+  line-height: 120%;
+  text-transform: uppercase;
+
+  @include bagerich;
+}
+
+@mixin H2 {
+  font-size: $font-size-h2;
+  line-height: 120%;
+
+  @include bagerich;
+}
+
+@mixin H3 {
+  font-size: $font-size-h3;
+  line-height: 120%;
+  text-transform: uppercase;
+
+  @include bagerich;
+}
+
+@mixin H4 {
+  font-size: $font-size-h4;
+  line-height: 120%;
+
+  @include bagerich;
+}
+
+@mixin p {
+  font-size: $font-size-p;
+  line-height: 120%;
+
+  @include bagerich;
+}
+
+/*@mixin H4_plain {
+  font-size: 1.250rem;
+  line-height: 120%;
+}
+
+@mixin text_plain {
+  font-size: 1rem;
+  line-height: 120%;
+}*/
+
+@mixin text_button {
+  font-weight: bold;
+  font-size: $font-size-button;
+  line-height: 120%;
+}

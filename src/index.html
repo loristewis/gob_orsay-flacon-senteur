@@ -6,27 +6,41 @@
     <title>23 - Imported models</title>
   </head>
   <body>
-    <!-- <div
-      style="
-        position: absolute;
-        z-index: 999;
-        height: 100vh;
-        width: 1px;
-        background-color: red;
-        top: 0;
-        left: 50%;
-      "
-      class="line"
-    ></div> -->
-    <section>
-      <button style="position: absolute; top: 0; left: 0">start</button>
-      <div id="audio"></div>
-      <img
-        id="portrait-eq"
-        src="../static/images/textures/portrait.png"
-        alt=""
-      />
+    <section id="welcome-screen">
+      <div class="content-wrapper content-wrapper__loading">
+        <div class="logos-wrapper">
+          <img src="./styles/images/Logo_Gobelins.png" alt="Gobelins, l'école de l'image">
+          <img src="./styles/images/Loading.png" alt="">
+          <img src="./styles/images/Logo_musée_d'Orsay_blanc.png" alt="Musée d'Orsay">
+        </div>
+        <div class="text-wrapper">Chargement...</div>
+      </div>
+      <div class="content-wrapper content-wrapper__title">
+        <div class="title-wrapper">
+          <h1 class="logo-wrapper"><img src="./styles/images/logo.svg" alt="Flacon à senteur"></h1>
+          <p>Découvrez l’Art nouveau à travers<br>la conception d’un bijou fabriqué par <span class="bagerich">René LALIQUE</span></p>
+        </div>
+        <div class="start-button">Commencer</div>
+        <ul class="names">
+          <li>Bartholomé CHASSAC</li>
+          <li>Loris BIRKEMEYER</li>
+          <li>Pierre NOTTIN</li>
+          <li>Quentin SÉNÉCAL</li>
+          <li>Sami BOUTALEB</li>
+        </ul>
+      </div>
     </section>
+
+    <section id="main-screen">
+        <button style="position: absolute; top: 0; left: 0">start</button>
+        <div id="audio"></div>
+        <img
+                id="portrait-eq"
+                src="../static/images/textures/portrait.png"
+                alt=""
+        />
+    </section>
+
     <canvas class="eq-canvas"></canvas>
     <canvas class="draw-canvas"></canvas>
     <canvas class="webgl"></canvas>

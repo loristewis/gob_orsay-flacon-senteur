@@ -1,0 +1,151 @@
+@import "fonts";
+@import "variables";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  font-family: 'News Cycle', sans-serif;
+  font-size: 16px;
+}
+
+section {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+section {
+  position: relative;
+
+  &#welcome-screen {
+    z-index: 1010;
+    background: url('./images/welcome_screen.png') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+
+    .content-wrapper {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+
+      &__loading {
+        justify-content: center;
+
+        .logos-wrapper {
+          display: flex;
+          justify-content: space-evenly;
+          align-items: center;
+          width: 100%;
+        }
+
+        .text-wrapper {
+          margin-top: 40px;
+          color: $paper;
+
+          @include H4;
+        }
+      }
+
+      &__title {
+        visibility: hidden;
+        justify-content: flex-end;
+        row-gap: 15%;
+        padding: 0 0 48px;
+      }
+    }
+
+    h1 {
+      margin-bottom: 10%;
+      text-transform: initial !important;
+      font-size: 3.812rem;
+
+      @include bagerich;
+
+      span {
+        &:first-child {
+          color: $paper;
+        }
+
+        &:last-child {
+          color: $gold;
+        }
+      }
+    }
+
+    p {
+      color: $paper;
+      font-size: $font-size-p;
+    }
+
+    ul.names {
+      list-style-type: none;
+      display: flex;
+      gap: 24px;
+      color: $paper;
+      font-size: $font-size-button;
+    }
+
+    div.start-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 193px;
+      height: 60px;
+      min-height: 60px;
+      background: url('./images/button.svg') no-repeat center center;
+      background-size: contain;
+      color: $paper;
+      text-transform: uppercase;
+
+      &:hover {
+        //background: url('./images/button-hover.svg') no-repeat center center;
+      }
+    }
+  }
+
+  &#main-screen {
+    /*z-index: 5;*/
+  }
+}
+
+.bagerich {
+  @include bagerich;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+  z-index: 1;
+}
+
+.draw-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+  z-index: 2;
+  /* pointer-events: none; */
+}
+
+.eq-canvas {
+  /* background-color: royalblue; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
