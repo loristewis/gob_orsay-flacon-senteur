@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 // import * as dat from "lil-gui";
 import gsap from "gsap";
 
@@ -8,269 +10,179 @@ import ee from "./utils/eventsSetUp";
 import fragmentShader from "../shaders/fragment.glsl";
 import vertexShader from "../shaders/vertex.glsl";
 
-/**
- * Base
- */
-// Debug
-// const gui = new dat.GUI();
-
-/**
- * Texture
- */
-const textureLoader = new THREE.TextureLoader();
-
-const smokeTexture = textureLoader.load("/images/textures/smoke2.png", () => {
-  // const smokeParticles = [];
-  // for (let p = 0; p < 50; p++) {
-  //   let smoke = new THREE.Mesh(smokeGeo, smokeMaterial);
-  //   smoke.position.set(
-  //     Math.random() * (800 / 8) - 400 / 8,
-  //     500 / 8,
-  //     Math.random() * (500 / 8) - 500 / 8
-  //   );
-  //   // smoke.rotation.x = 1.16;
-  //   // smoke.rotation.y = -0.12;
-  //   smoke.rotation.z = Math.random() * 2 * Math.PI;
-  //   smoke.material.opacity = 0.55;
-  //   smokeParticles.push(smoke);
-  //   scene.add(smoke);
-  // }
-});
-
-// Canvas
-const webglCanvas = document.querySelector("canvas.webgl");
-
-/**
- * Mouse
- */
-// const mouse = new THREE.Vector2();
-
-// const handleMouseMove = (e) => {
-//   getPoint(e);
-//   setPoint();
-// };
-// document.addEventListener("mousemove", handleMouseMove);
-
-// Scene
-const scene = new THREE.Scene();
-
-/**
- * Draw points
- */
-
-// // const plane = new THREE.Plane();
-// // const planeNormal = new THREE.Vector3();
-// // const raycaster = new THREE.Raycaster();
-// // const point = new THREE.Vector3();
-// // const pointArray = [];
-// // let splineObject;
-
-// // const getPoint = (e) => {
-// //   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-// //   mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-// //   point.x = mouse.x;
-// //   point.y = mouse.y;
-// //   planeNormal.copy(camera.position).normalize();
-// //   plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);
-// //   raycaster.setFromCamera(mouse, camera);
-// //   raycaster.ray.intersectPlane(plane, point);
-
-// //   //   pointArray.push(point);
-
-// //   //   const curve = new THREE.SplineCurve(pointArray);
-// //   //   console.log(pointArray);
-// //   //   const interpolatedPoints = curve.getPoints(100);
-// //   //   const geometry = new THREE.BufferGeometry().setFromPoints(interpolatedPoints);
-
-// //   //   const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-
-// //   // Create the final object to add to the scene
-// //   //   splineObject = new THREE.Line(geometry, material);
-// //   //   scene.add(splineObject);
-// // };
-
-// // const setPoint = () => {
-// //   const sphere = new THREE.Mesh(
-// //     new THREE.SphereGeometry(0.09, 20, 16),
-// //     new THREE.MeshBasicMaterial({
-// //       color: "yellow",
-// //     })
-// //   );
-// //   //   sphere.position.copy(pointArray[pointArray.length - 1]);
-// //   sphere.position.copy(point);
-// //   //   scene.add(sphere);
-// // };
+// /**
+//  * Base
+//  */
+// // Debug
+// // const gui = new dat.GUI();
 
 // /**
-//  * Floor
+//  * Texture
 //  */
-// const floor = new THREE.Mesh(
-//   new THREE.PlaneGeometry(10, 10),
-//   new THREE.MeshBasicMaterial({
-//     color: 0xeeeeee,
-//   })
-// );
-// floor.receiveShadow = true;
-// // floor.rotation.x = -Math.PI * 0.5;
-// // scene.add(floor);
+// const textureLoader = new THREE.TextureLoader();
 
-/**
- * Sphere
- */
-const sphere = new THREE.Mesh(
-  new THREE.SphereGeometry(1, 20, 20),
-  new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    wireframe: true,
-  })
-);
-sphere.scale.set(0, 0, 0);
-sphere.position.z = -5;
-scene.add(sphere);
-
-ee.on("drawingCompleted", () => {
-  gsap.to(sphere.scale, {
-    x: 1.2,
-    y: 1.2,
-    z: 1.2,
-    duration: 1,
-    ease: "power4",
-  });
-});
-
-/**
- * Smoke
- */
-const smokeGeo = new THREE.PlaneBufferGeometry(10, 10);
-const smokeMaterial = new THREE.ShaderMaterial({
-  fragmentShader,
-  vertexShader,
-  uniforms: {
-    uTime: { value: 0 },
-    uTexture: { value: smokeTexture },
-  },
-});
-const smoke = new THREE.Mesh(smokeGeo, smokeMaterial);
-smoke.position.set(5, -4, 0);
-smoke.rotation.y = -0.5;
-// scene.add(smoke);
-// console.log(smokeMaterial);
-/**
- * Fog
- */
-scene.fog = new THREE.FogExp2(0x1d272e, 0.001);
-
-/**
- * Lights
- */
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-scene.add(ambientLight);
-
-// const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-// directionalLight.castShadow = true;
-// directionalLight.shadow.mapSize.set(1024, 1024);
-// directionalLight.shadow.camera.far = 15;
-// directionalLight.shadow.camera.left = -7;
-// directionalLight.shadow.camera.top = 7;
-// directionalLight.shadow.camera.right = 7;
-// directionalLight.shadow.camera.bottom = -7;
-// directionalLight.position.set(5, 5, 5);
-// scene.add(directionalLight);
+//  * Axes Helper
+//  */
+// // const axesHelper = new THREE.AxesHelper(2);
+// // scene.add(axesHelper);
 
 // /**
-//  * Sizes
+//  * Renderer
 //  */
-const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight,
-};
+// const renderer = new THREE.WebGLRenderer({
+//   canvas: webglCanvas,
+//   alpha: true,
+// });
+// renderer.shadowMap.enabled = true;
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+// renderer.setSize(sizes.width, sizes.height);
+// renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-window.addEventListener("resize", () => {
-  // Update sizes
-  sizes.width = window.innerWidth;
-  sizes.height = window.innerHeight;
+class ThreeScene {
+  constructor() {
+    // Canvas
+    this.webglCanvas = document.querySelector("canvas.webgl");
 
-  // Update camera
-  camera.aspect = sizes.width / sizes.height;
-  camera.updateProjectionMatrix();
+    // Scene
+    this.scene = new THREE.Scene();
 
-  // Update renderer
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
+    this.clock = new THREE.Clock();
 
-/**
- * Camera
- */
-// Base camera
-// const camera = new THREE.PerspectiveCamera(
-//   75,
-//   sizes.width / sizes.height,
-//   0.1,
-//   100
-// );
-// camera.position.set(0, 0, 5);
-// scene.add(camera);
+    this.sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.z = 5;
-// camera.rotation.x = 1.16;
-// camera.rotation.y = -0.12;
-// camera.rotation.z = 0.27;
-scene.add(camera);
+    this.setCamera();
+    this.setControls();
+    this.setLights();
 
-/**
- * Axes Helper
- */
-// const axesHelper = new THREE.AxesHelper(2);
-// scene.add(axesHelper);
+    this.setRenderer();
 
-// Controls
-const controls = new OrbitControls(camera, webglCanvas);
-// controls.target.set(0, 0.75, 0);
-controls.enableDamping = true;
+    this.loadModels();
 
-/**
- * Renderer
- */
-const renderer = new THREE.WebGLRenderer({
-  canvas: webglCanvas,
-});
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.setSize(sizes.width, sizes.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(scene.fog.color);
+    this.setListeners();
+    this.setEmitters();
 
-/**
- * Animate
- */
-const clock = new THREE.Clock();
+    this.addSphere();
 
-const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
-  smokeMaterial.uniforms.uTime.value = elapsedTime;
-  //   cylinderMaterial.uniforms.uMouse.value[0] = mouse.x;
-  //   cylinderMaterial.uniforms.uMouse.value[1] = mouse.y;
+    this.loop();
+  }
 
-  sphere.rotation.y = elapsedTime * 0.5;
-  // sphere.rotation.z = Math.cos(elapsedTime);
+  addSphere() {
+    this.sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 20, 20),
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+      })
+    );
+    // this.sphere.scale.set(0, 0, 0);
+    this.sphere.scale.set(2, 2, 2);
+    this.sphere.position.z = -5;
+    this.scene.add(this.sphere);
+  }
 
-  // Update controls
-  controls.update();
+  loadModels() {
+    this.gltfLoader = new GLTFLoader();
 
-  //   painter.update();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("/draco/");
+    this.gltfLoader.setDRACOLoader(dracoLoader);
 
-  // Render
-  renderer.render(scene, camera);
+    this.gltfLoader.load("/models/flacon.glb", (gltf) => {
+      const flacon = gltf.scene;
+      this.scene.add(gltf.scene);
+      flacon.position.set(0, -1, 0);
+    });
+  }
 
-  // Call tick again on the next frame
-  window.requestAnimationFrame(tick);
-};
+  setCamera() {
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    this.camera.position.z = 5;
+    this.scene.add(this.camera);
+  }
 
-tick();
+  setLights() {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 10);
+    this.scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 0, 3);
+    this.scene.add(directionalLight);
+
+    // const directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
+    // directionalLight2.position.set(-1, 0, 0);
+    // this.scene.add(directionalLight2);
+  }
+
+  setControls() {
+    // Controls
+    this.controls = new OrbitControls(this.camera, this.webglCanvas);
+    // controls.target.set(0, 0.75, 0);
+    this.controls.enableDamping = true;
+  }
+
+  setEmitters() {
+    ee.on("drawingCompleted", () => {
+      gsap.to(sphere.scale, {
+        x: 1.2,
+        y: 1.2,
+        z: 1.2,
+        duration: 1,
+        ease: "power4",
+      });
+    });
+  }
+
+  setRenderer() {
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.webglCanvas,
+      alpha: true,
+    });
+    this.renderer.setSize(this.sizes.width, this.sizes.height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  }
+
+  setListeners() {
+    window.addEventListener("resize", () => {
+      // Update sizes
+      this.sizes.width = window.innerWidth;
+      this.sizes.height = window.innerHeight;
+
+      // Update camera
+      this.camera.aspect = this.sizes.width / this.sizes.height;
+      this.camera.updateProjectionMatrix();
+
+      // Update renderer
+      this.renderer.setSize(this.sizes.width, this.sizes.height);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    });
+  }
+
+  loop() {
+    const elapsedTime = this.clock.getElapsedTime();
+    // smokeMaterial.uniforms.uTime.value = elapsedTime;
+    //   cylinderMaterial.uniforms.uMouse.value[0] = mouse.x;
+    //   cylinderMaterial.uniforms.uMouse.value[1] = mouse.y;
+
+    this.sphere.rotation.y = elapsedTime * 0.5;
+    // sphere.rotation.z = Math.cos(elapsedTime);
+
+    // Update controls
+    this.controls.update();
+
+    // Render
+    this.renderer.render(this.scene, this.camera);
+
+    // Call tick again on the next frame
+    requestAnimationFrame(this.loop.bind(this));
+  }
+}
+
+new ThreeScene();

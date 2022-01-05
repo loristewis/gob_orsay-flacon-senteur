@@ -13,8 +13,12 @@ body {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  font-family: 'News Cycle', sans-serif;
+  font-family: "News Cycle", sans-serif;
   font-size: 16px;
+
+  // TODO DELETE
+  background: url("./images/welcome_screen.png") no-repeat center center fixed;
+  background-size: cover;
 }
 
 section {
@@ -27,8 +31,10 @@ section {
   position: relative;
 
   &#welcome-screen {
+    display: none;
+
     z-index: 1010;
-    background: url('./images/welcome_screen.png') no-repeat center center fixed;
+    background: url("./images/welcome_screen.png") no-repeat center center fixed;
     background-size: cover;
     text-align: center;
 
@@ -104,7 +110,7 @@ section {
       width: 193px;
       height: 60px;
       min-height: 60px;
-      background: url('./images/button.svg') no-repeat center center;
+      background: url("./images/button.svg") no-repeat center center;
       background-size: contain;
       color: $paper;
       text-transform: uppercase;
@@ -116,6 +122,8 @@ section {
   }
 
   &#main-screen {
+    display: none;
+
     /*z-index: 5;*/
   }
 }
