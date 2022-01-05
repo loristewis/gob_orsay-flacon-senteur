@@ -4,7 +4,7 @@ const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 module.exports = {
-  entry: path.resolve(__dirname, "../src/script.js"),
+  entry: path.resolve(__dirname, "../src/main.js"),
   output: {
     hashFunction: "xxhash64",
     filename: "bundle.[contenthash].js",
@@ -49,6 +49,13 @@ module.exports = {
         generator: {
           filename: "assets/images/[hash][ext]",
         },
+      },
+
+      //MP3
+      {
+        test: /\.mp3$/,
+        include: path.resolve(__dirname, "../static"),
+        loader: "file-loader",
       },
 
       // Fonts

@@ -6,7 +6,29 @@
     <title>23 - Imported models</title>
   </head>
   <body>
-    <canvas style="background-color: rgba(255, 0, 0, 1);" class="draw-canvas"></canvas>
+    <!-- <div
+      style="
+        position: absolute;
+        z-index: 999;
+        height: 100vh;
+        width: 1px;
+        background-color: red;
+        top: 0;
+        left: 50%;
+      "
+      class="line"
+    ></div> -->
+    <section>
+      <button style="position: absolute; top: 0; left: 0">start</button>
+      <div id="audio"></div>
+      <img
+        id="portrait-eq"
+        src="../static/images/textures/portrait.png"
+        alt=""
+      />
+    </section>
+    <canvas class="eq-canvas"></canvas>
+    <canvas class="draw-canvas"></canvas>
     <canvas class="webgl"></canvas>
   </body>
 </html>

@@ -8,6 +8,23 @@ body {
   overflow: hidden;
 }
 
+body {
+  min-height: 100vh;
+  background: url("../static/images/textures/bg-portrait.png");
+  background-position: center center;
+  background-size: cover;
+}
+
+section {
+  position: relative;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .webgl {
   position: fixed;
   top: 0;
@@ -23,4 +40,13 @@ body {
   outline: none;
   z-index: 2;
   /* pointer-events: none; */
+}
+
+.eq-canvas {
+  /* background-color: royalblue; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
