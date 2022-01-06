@@ -1,15 +1,15 @@
 import Particles from "./Particles";
 
 class VoiceEqualizer {
-  constructor(audioUrl) {
-    console.log("new EQ");
+  constructor(audioUrl, pageId) {
     this.canvas = document.querySelector(".eq-canvas");
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
+    this.pageId = pageId;
+
     this.image = document.querySelector("#portrait-eq");
     this.imageWidth = this.image.getBoundingClientRect().width;
-    console.log(this.imageWidth);
     this.testCounter = 0;
     this.circleRadius = this.imageWidth / 2 + 15;
     this.offsetEq = 10;
@@ -19,26 +19,27 @@ class VoiceEqualizer {
     this.particlesState = Array(100);
 
     this.ctx = this.canvas.getContext("2d");
-    console.log(document.querySelector("button"));
 
     // this.init();
     this.setUpCanvas();
-    this.setUpAudio.bind(this);
+    this.setUpAudio();
   }
 
   setUpCanvas() {
-    this.ctx.beginPath();
-    this.ctx.arc(
-      this.canvas.width / 2,
-      this.canvas.height / 2,
-      this.circleRadius,
-      0,
-      2 * Math.PI
-    );
-    this.ctx.strokeStyle = "white";
-    this.ctx.lineWidth = 1;
-    this.ctx.stroke();
-    this.ctx.closePath();
+    if (this.pageId < 4) {
+      this.ctx.beginPath();
+      this.ctx.arc(
+        this.canvas.width / 2,
+        this.canvas.height / 2,
+        this.circleRadius,
+        0,
+        2 * Math.PI
+      );
+      this.ctx.strokeStyle = "white";
+      this.ctx.lineWidth = 1;
+      this.ctx.stroke();
+      this.ctx.closePath();
+    }
   }
 
   setUpAudio() {
@@ -59,7 +60,7 @@ class VoiceEqualizer {
       this.source.connect(this.analyser);
       this.analyser.connect(this.audioContext.destination);
       this.audio.play();
-      this.loop();
+      if (this.pageId < 4) this.loop();
     });
 
     // window.setTimeout(() => {
@@ -168,7 +169,12 @@ class VoiceEqualizer {
 
       // this.ctx.fillRect(bar_pos, this.canvas.height, bar_width, bar_height);
     }
-    requestAnimationFrame(this.loop.bind(this));
+    this.reqId = window.requestAnimationFrame(this.loop.bind(this));
+  }
+
+  destroy() {
+    this.pageId = 1000;
+    window.cancelAnimationFrame(this.reqId);
   }
 }
 
