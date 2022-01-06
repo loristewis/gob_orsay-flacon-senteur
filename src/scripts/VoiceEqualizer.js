@@ -171,4 +171,4 @@ class VoiceEqualizer {
   }
 }
 
-new VoiceEqualizer("/sounds/voice.mp3");
+new VoiceEqualizer("/sounds/shreksophone.mp3");
