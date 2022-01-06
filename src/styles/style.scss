@@ -97,25 +97,147 @@ section {
     }
 
     #start-button {
+      $button-width: 193px;
+      $button-height: 70px;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 193px;
-      height: 60px;
-      min-height: 60px;
-      background: url('./images/button.svg') no-repeat center center;
-      background-size: contain;
+      width: $button-width;
+      height: $button-height;
+      min-height: $button-height;
       color: $paper;
       text-transform: uppercase;
 
-      &:hover {
-        //background: url('./images/button-hover.svg') no-repeat center center;
+      &::before,
+      &::after {
+        content: '';
+        width: $button-width;
+        height: $button-height;
+        min-height: $button-height;
+        position: absolute;
+      }
+
+      &::before {
+        background: url('./images/button.svg') no-repeat center center;
+        opacity: 1;
+        transition: .4s ease;
+      }
+
+      &::after {
+        background: url('./images/button-hover.svg') no-repeat center center;
+        opacity: 0;
+        transition: .4s ease;
+      }
+
+      &:hover,
+      &:active,
+      &:focus {
+        &::before { opacity: 0; }
+
+        &::after { opacity: 1; }
       }
     }
   }
 
   &#main-screen {
-    /*z-index: 5;*/
+    background: url('./images/main_screen.png') no-repeat center center fixed;
+    background-size: cover;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 48px;
+
+      .logo img {
+        width: 115px;
+        height: 56px;
+      }
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 96px 96px;
+
+      &__title {
+        margin-bottom: 16px;
+        text-align: center;
+        color: $gold;
+
+        @include H4;
+      }
+
+      &__chapo {
+        text-align: center;
+        color: $paper;
+
+        @include text;
+      }
+
+      &__subtitles {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+
+        p {
+          max-width: 50ch;
+          color: $paper;
+
+          @include text;
+        }
+      }
+    }
+
+    /*#menu-button {
+      $button-width: 193px;
+      $button-height: 100px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: $button-width;
+      height: $button-height;
+      min-height: $button-height;
+      color: $paper;
+      text-transform: uppercase;
+
+      &::before,
+      &::after {
+        content: '';
+        width: $button-width;
+        height: $button-height;
+        min-height: $button-height;
+        position: absolute;
+      }
+
+      &::before {
+        background: url('./images/Menu.svg') no-repeat center center;
+        opacity: 1;
+        transition: .4s ease;
+      }
+
+      &::after {
+        background: url('./images/Menu_hover.svg') no-repeat center center;
+        opacity: 0;
+        transition: .4s ease;
+      }
+
+      &:hover,
+      &:active,
+      &:focus {
+        &::before { opacity: 0; }
+
+        &::after { opacity: 1; }
+      }
+    }*/
   }
 }
 
