@@ -7,41 +7,102 @@
   </head>
   <body>
     <section id="welcome-screen">
-      <div class="content-wrapper content-wrapper__loading" id="loading-screen"></div>
-      <div class="content-wrapper content-wrapper__title" id="title-screen"></div>
+      <div class="content-wrapper content-wrapper__loading" id="loading-screen">
+          <div class="content-wrapper content-wrapper__loading">
+              <div class="logos-wrapper">
+                  <img src="../static/images/Logo_Gobelins.png" alt="Gobelins, l'école de l'image">
+                  <img src="../static/images/Loading.png" alt="">
+                  <img src="../static/images/Logo_Orsay.png" alt="Musée d'Orsay">
+              </div>
+              <div class="text-wrapper">Chargement...</div>
+          </div>
+      </div>
+      <div class="content-wrapper content-wrapper__title" id="title-screen">
+          <div class="content-wrapper content-wrapper__title">
+              <div class="title-wrapper">
+                  <h1 class="logo-wrapper"><img src="../static/images/logo.svg" alt="Flacon à senteur"></h1>
+                  <p>Découvrez l’Art nouveau à travers<br>la conception d’un bijou fabriqué par <span class="bagerich">René LALIQUE</span></p>
+              </div>
+              <div id="start-button">Commencer</div>
+              <ul class="names">
+                  <li>Quentin SÉNÉCAL</li>
+                  <li>Sami BOUTALEB</li>
+                  <li>Bartholomé CHASSAC</li>
+                  <li>Loris BIRKEMEYER</li>
+                  <li>Pierre NOTTIN</li>
+              </ul>
+          </div>
+      </div>
     </section>
 
-    <section id="main-screen">
-        <header>
+    <section id="content-screen">
+        <nav>
             <div class="menu" id="menu-button">Menu</div>
             <div class="logo">
                 <h1 class="logo-wrapper"><img src="./styles/images/logo.svg" alt="Flacon à senteur"></h1>
             </div>
             <div class="sound">Son</div>
-        </header>
-        <main>
+        </nav>
+        <main id="content-screen-main">
+
+            <section id="Narration">
+                <div>
+                    <img id="portrait-eq" src="../static/images/textures/portrait.png" alt="">
+                </div>
+            </section>
+
+            <section id="ArtNouveau">
+                <h2>L’art Nouveau, c’est quoi ?</h2>
+                <div>
+                    <img src="../static/images/art_nouveau.png" alt="" />
+                </div>
+            </section>
+
+            <section id="Flacon">
+                <h2>Le Flacon</h2>
+                <div>
+
+                </div>
+            </section>
+
+            <section id="Parfum">
+                <h2>Le Parfum</h2>
+                <div>
+
+                </div>
+            </section>
+
+            <section id="Bouchon">
+                <h2>Le Bouchon</h2>
+                <div>
+
+                </div>
+            </section>
+
+            <section id="Maestria">
+                <h2>MAESTRIA</h2>
+                <div>
+
+                </div>
+            </section>
+
             <!--        <button style="position: absolute; top: 0; left: 0">start</button>-->
             <!--        <div id="audio"></div>-->
-            <!--        <img-->
-            <!--                id="portrait-eq"-->
-            <!--                src="../static/images/textures/portrait.png"-->
-            <!--                alt=""-->
-            <!--        />-->
+<!--                    <img-->
+<!--                            id="portrait-eq"-->
+<!--                            src="../static/images/textures/portrait.png"-->
+<!--                            alt=""-->
+<!--                    />-->
         </main>
-        <footer class="footer">
-            <div class="footer__intro">
-                <p class="footer__title">Lorem ipsum dolor sit amet</p>
-                <p class="footer__chapo">Consectetur adipisicing elit. Aut culpa impedit magni maiores porro quis saepe. Accusantium aspernatur, eius eveniet ipsum, laboriosam molestiae nihil numquam, odio quibusdam sed vel vitae.</p>
-            </div>
-            <div class="footer__subtitles">
-                <div class="lalique"><img src="./styles/images/lalique_placeholder.png" alt=""></div>
-                <p>Je me suis illustré dans la joiallerie mais l’Art nouveau a aussi inspiré l’architecture, la peinture, l’ébénisterie ou la verrerie.</p>
-            </div>
+        <button id="next" style="position: relative; z-index: 5;">NEXT</button>
+<!--        <button id="previous">PREVIOUS</button>-->
+        <footer class="footer" id="content-screen-footer">
+<!--            <section class="slide-1">texte slide 1</section>-->
         </footer>
     </section>
 
     <script type="application/javascript">
-        document.getElementsByClassName('footer__intro')[0].style.display = "none"
+        // document.getElementsByClassName('footer__intro')[0].style.display = "none"
     </script>
 
     <canvas class="eq-canvas"></canvas>

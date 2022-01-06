@@ -140,18 +140,27 @@ section {
     }
   }
 
-  &#main-screen {
+  &#content-screen {
+    visibility: hidden;
     background: url('./images/main_screen.png') no-repeat center center fixed;
     background-size: cover;
 
-    header {
+    $navHeight: 170px;
+    $footerHeight: 215px;
+
+    nav {
       display: flex;
       justify-content: space-between;
+
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      padding: 48px;
+
+      height: $navHeight;
+      min-height: $navHeight;
+      max-height: $navHeight;
+      padding: 48px 48px 56px;
 
       .logo img {
         width: 115px;
@@ -159,11 +168,54 @@ section {
       }
     }
 
+    main {
+      position: fixed;
+      top: $navHeight;
+      left: 0;
+      right: 0;
+      height: calc(100% - #{$navHeight} - #{$footerHeight});
+
+      h2 {
+        color: $gold;
+        text-align: center;
+
+        @include H3;
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        img {
+          max-width: 90%;
+          max-height: 80%;
+
+          &#portrait-eq {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+    }
+
     .footer {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
+
+      height: $footerHeight;
+      min-height: $footerHeight;
+      max-height: $footerHeight;
       padding: 0 96px 96px;
 
       &__title {
@@ -195,49 +247,6 @@ section {
         }
       }
     }
-
-    /*#menu-button {
-      $button-width: 193px;
-      $button-height: 100px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: $button-width;
-      height: $button-height;
-      min-height: $button-height;
-      color: $paper;
-      text-transform: uppercase;
-
-      &::before,
-      &::after {
-        content: '';
-        width: $button-width;
-        height: $button-height;
-        min-height: $button-height;
-        position: absolute;
-      }
-
-      &::before {
-        background: url('./images/Menu.svg') no-repeat center center;
-        opacity: 1;
-        transition: .4s ease;
-      }
-
-      &::after {
-        background: url('./images/Menu_hover.svg') no-repeat center center;
-        opacity: 0;
-        transition: .4s ease;
-      }
-
-      &:hover,
-      &:active,
-      &:focus {
-        &::before { opacity: 0; }
-
-        &::after { opacity: 1; }
-      }
-    }*/
   }
 }
 
