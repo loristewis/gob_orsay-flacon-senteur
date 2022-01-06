@@ -1,8 +1,10 @@
 import { PAGES } from '../data/content'
 import { VoiceEqualizer } from './VoiceEqualizer';
 
-const main = document.getElementById('content-screen-main')
+// const main = document.getElementById('content-screen-main')
 const footer = document.getElementById('content-screen-footer')
+
+const nextButton = document.getElementById("next")
 
 const Narration = document.getElementById('Narration')
 const ArtNouveau = document.getElementById('ArtNouveau')
@@ -10,6 +12,7 @@ const Flacon = document.getElementById('Flacon')
 const Parfum = document.getElementById('Parfum')
 const Bouchon = document.getElementById('Bouchon')
 const Maestria = document.getElementById('Maestria')
+const eqCanvas = document.getElementById('eq-canvas')
 Narration.style.display = "none"
 ArtNouveau.style.display = "none"
 Flacon.style.display = "none"
@@ -26,7 +29,7 @@ let currentPageId
 const updatePage = () => {
 	let page = PAGES[currentPageId]
 	currentPageId++
-	console.log(currentPageId)
+	console.log('currentPageId: ', currentPageId)
 
 	/**
 	 * POUR CHAQUE GROUPE DE 3 PAGES
@@ -61,6 +64,8 @@ const updatePage = () => {
 		Bouchon.style.display = "none"
 		Maestria.style.display = "none"
 	}
+
+	// Parfum
 	else if ( currentPageId >= 10 && currentPageId <= 12 ) {
 		Narration.style.display = "none"
 		ArtNouveau.style.display = "none"
@@ -70,6 +75,7 @@ const updatePage = () => {
 		Maestria.style.display = "none"
 	}
 
+	// Bouchon
 	else if ( currentPageId >= 13 && currentPageId <= 15 ) {
 		Narration.style.display = "none"
 		ArtNouveau.style.display = "none"
@@ -79,6 +85,7 @@ const updatePage = () => {
 		Maestria.style.display = "none"
 	}
 
+	// 3D
 	else if ( currentPageId >= 16 ) {
 		Narration.style.display = "none"
 		ArtNouveau.style.display = "none"
@@ -88,10 +95,58 @@ const updatePage = () => {
 		Maestria.style.display = "block"
 	}
 
+	/**
+	 * SON - CHAQUE PAGE
+	 */
 	switch (currentPageId) {
 		case 1:
-			new VoiceEqualizer("/sounds/voice.mp3");
-			break
+			new VoiceEqualizer("/sounds/N_01.mp3");
+			break;
+		case 2:
+			new VoiceEqualizer("/sounds/N_02.mp3");
+			break;
+		case 3:
+			new VoiceEqualizer("/sounds/N_03.mp3");
+			break;
+		case 4:
+			new VoiceEqualizer("/sounds/A_01.mp3");
+			break;
+		case 5:
+			new VoiceEqualizer("/sounds/A_02.mp3");
+			break;
+		case 6:
+			new VoiceEqualizer("/sounds/A_03.mp3");
+			break;
+		case 7:
+			new VoiceEqualizer("/sounds/F_01.mp3");
+			break;
+		case 8:
+			new VoiceEqualizer("/sounds/F_02.mp3");
+			break;
+		case 9:
+			new VoiceEqualizer("/sounds/F_03.mp3");
+			break;
+		case 10:
+			new VoiceEqualizer("/sounds/P_01.mp3");
+			break;
+		case 11:
+			new VoiceEqualizer("/sounds/P_02.mp3");
+			break;
+		case 12:
+			new VoiceEqualizer("/sounds/P_03.mp3");
+			break;
+		case 13:
+			new VoiceEqualizer("/sounds/B_01.mp3");
+			break;
+		case 14:
+			new VoiceEqualizer("/sounds/B_02.mp3");
+			break;
+		case 15:
+			new VoiceEqualizer("/sounds/B_03.mp3");
+			break;
+		case 16:
+			new VoiceEqualizer("/sounds/3d_01.mp3");
+			break;
 	}
 
 	/**
@@ -122,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	currentPageId = 0
 	updatePage()
 
-	const nextButton = document.getElementById("next")
 	nextButton.onclick = updatePage
 }, false);
 

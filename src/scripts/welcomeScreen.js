@@ -20,6 +20,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	}
 
 	/** DEBUG - ACCÈS DIRECT CONTENU */
-	welcomeScreen.style.display = "none";	contentScreen.style.visibility = "visible"
+	// welcomeScreen.style.display = "none";	contentScreen.style.visibility = "visible"
 
 }, false);

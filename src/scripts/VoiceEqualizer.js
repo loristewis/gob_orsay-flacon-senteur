@@ -20,9 +20,14 @@ class VoiceEqualizer {
     this.ctx = this.canvas.getContext("2d");
     console.log(document.querySelector("button"));
 
+    const titleScreen = document.getElementById("title-screen")
+    const nextButton = document.getElementById("next")
+
     // this.init();
     this.setUpCanvas();
-    this.setUpAudio.bind(this)
+    titleScreen.addEventListener('click', this.setUpAudio.bind(this))
+    nextButton.addEventListener('click', this.setUpAudio.bind(this))
+
   }
 
   setUpCanvas() {
