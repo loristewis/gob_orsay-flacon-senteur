@@ -8,6 +8,7 @@ class VoiceEqualizer {
 
     this.image = document.querySelector("#portrait-eq");
     this.imageWidth = this.image.getBoundingClientRect().width;
+    console.log(this.imageWidth)
     this.testCounter = 0;
     this.circleRadius = this.imageWidth / 2 + 15;
     this.offsetEq = 10;
@@ -18,11 +19,10 @@ class VoiceEqualizer {
 
     this.ctx = this.canvas.getContext("2d");
     console.log(document.querySelector("button"));
-    document
-      .querySelector("button")
-      .addEventListener("click", this.setUpAudio.bind(this));
+
     // this.init();
     this.setUpCanvas();
+    this.setUpAudio.bind(this)
   }
 
   setUpCanvas() {
@@ -171,4 +171,10 @@ class VoiceEqualizer {
   }
 }
 
+<<<<<<< HEAD
 new VoiceEqualizer("/sounds/shreksophone.mp3");
+=======
+export {VoiceEqualizer}
+
+// new VoiceEqualizer("/sounds/voice.mp3");
+>>>>>>> origin/main

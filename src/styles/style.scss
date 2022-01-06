@@ -65,7 +65,6 @@ section {
       }
 
       &__title {
-        visibility: hidden;
         justify-content: flex-end;
         row-gap: 15%;
         padding: 0 0 48px;
@@ -103,24 +102,59 @@ section {
       font-size: $font-size-button;
     }
 
-    div.start-button {
+    #start-button {
+      $button-width: 193px;
+      $button-height: 70px;
+
       display: flex;
       align-items: center;
       justify-content: center;
+<<<<<<< HEAD
       width: 193px;
       height: 60px;
       min-height: 60px;
       background: url("./images/button.svg") no-repeat center center;
       background-size: contain;
+=======
+      width: $button-width;
+      height: $button-height;
+      min-height: $button-height;
+>>>>>>> origin/main
       color: $paper;
       text-transform: uppercase;
 
-      &:hover {
-        //background: url('./images/button-hover.svg') no-repeat center center;
+      &::before,
+      &::after {
+        content: '';
+        width: $button-width;
+        height: $button-height;
+        min-height: $button-height;
+        position: absolute;
+      }
+
+      &::before {
+        background: url('./images/button.svg') no-repeat center center;
+        opacity: 1;
+        transition: .4s ease;
+      }
+
+      &::after {
+        background: url('./images/button-hover.svg') no-repeat center center;
+        opacity: 0;
+        transition: .4s ease;
+      }
+
+      &:hover,
+      &:active,
+      &:focus {
+        &::before { opacity: 0; }
+
+        &::after { opacity: 1; }
       }
     }
   }
 
+<<<<<<< HEAD
   &#main-screen {
     display: none;
     display: flex;
@@ -132,6 +166,115 @@ section {
     }
 
     /*z-index: 5;*/
+=======
+  &#content-screen {
+    visibility: hidden;
+    background: url('./images/main_screen.png') no-repeat center center fixed;
+    background-size: cover;
+
+    $navHeight: 170px;
+    $footerHeight: 215px;
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      height: $navHeight;
+      min-height: $navHeight;
+      max-height: $navHeight;
+      padding: 48px 48px 56px;
+
+      .logo img {
+        width: 115px;
+        height: 56px;
+      }
+    }
+
+    main {
+      position: fixed;
+      top: $navHeight;
+      left: 0;
+      right: 0;
+      height: calc(100% - #{$navHeight} - #{$footerHeight});
+
+      h2 {
+        color: $gold;
+        text-align: center;
+
+        @include H3;
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        img {
+          max-width: 90%;
+          max-height: 80%;
+
+          &#portrait-eq {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+    }
+
+    .footer {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      height: $footerHeight;
+      min-height: $footerHeight;
+      max-height: $footerHeight;
+      padding: 0 96px 96px;
+
+      &__title {
+        margin-bottom: 16px;
+        text-align: center;
+        color: $gold;
+
+        @include H4;
+      }
+
+      &__chapo {
+        text-align: center;
+        color: $paper;
+
+        @include text;
+      }
+
+      &__subtitles {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+
+        p {
+          max-width: 50ch;
+          color: $paper;
+
+          @include text;
+        }
+      }
+    }
+>>>>>>> origin/main
   }
 }
 
