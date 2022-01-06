@@ -17,7 +17,7 @@ import vertexShader from "../shaders/vertex.glsl";
 import liquidFragment from "../shaders/liquid/liquidFragment.glsl";
 import liquidVertex from "../shaders/liquid/liquidVertex.glsl";
 
-class ThreeScene {
+export default class ThreeScene {
   constructor() {
     // Canvas
     this.webglCanvas = document.querySelector("canvas.webgl");
@@ -45,7 +45,7 @@ class ThreeScene {
       directionalLight1Color: 0xffffff,
       directionalLight2Color: 0xffffff,
       directionalLight3Color: 0xffffff,
-      liquidColor: 0xffd670,
+      liquidColor: 0xbd5500,
     };
 
     this.setCamera();
@@ -176,10 +176,10 @@ class ThreeScene {
       //Flacon
       flacon.material = glassMaterial;
       flacon.material.depthWrite = false;
-      // flacon.material.opacity = 0.6;
-      flacon.material.opacity = 0;
+      flacon.material.opacity = 0.6;
+      // flacon.material.opacity = 0;
       // flacon.material.color = new THREE.Color("red");
-      // flacon.rotation.x = Math.PI * 0.5;
+      flacon.rotation.y = Math.PI * 0.5;
 
       //Liquid
       this.liquid = flacon.clone();
@@ -259,7 +259,7 @@ class ThreeScene {
 
           float strength = step(1. - uProgress, vUv.y);
 
-          gl_FragColor = vec4( outgoingLight,  (strength + 0.4) / 1.4 );
+          gl_FragColor = vec4( outgoingLight,  strength  * 0.6 );
           `
         );
       };
@@ -354,8 +354,29 @@ class ThreeScene {
       0.1,
       10
     );
+    this.camera.position.y = 0.905;
     this.camera.position.z = 5;
     this.scene.add(this.camera);
+
+    this.cameraFolder = this.gui.addFolder("Camera");
+    this.cameraFolder
+      .add(this.camera.position, "x")
+      .min(-10)
+      .max(10)
+      .step(0.001)
+      .name("camera x");
+    this.cameraFolder
+      .add(this.camera.position, "y")
+      .min(-10)
+      .max(10)
+      .step(0.001)
+      .name("camera y");
+    this.cameraFolder
+      .add(this.camera.position, "z")
+      .min(-10)
+      .max(10)
+      .step(0.001)
+      .name("camera z");
   }
 
   setLights() {
