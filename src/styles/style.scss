@@ -15,10 +15,6 @@ body {
   margin: 0;
   font-family: "News Cycle", sans-serif;
   font-size: 16px;
-
-  // TODO DELETE
-  background: url("./images/welcome_screen.png") no-repeat center center fixed;
-  background-size: cover;
 }
 
 section {
@@ -31,7 +27,7 @@ section {
   position: relative;
 
   &#welcome-screen {
-    display: none;
+    // display: none;
 
     z-index: 1010;
     background: url("./images/welcome_screen.png") no-repeat center center fixed;
@@ -151,7 +147,7 @@ section {
   }
 
   &#content-screen {
-    visibility: hidden;
+    // visibility: hidden;
     background: url("./images/main_screen.png") no-repeat center center fixed;
     background-size: cover;
 

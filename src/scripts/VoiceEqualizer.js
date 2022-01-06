@@ -2,13 +2,14 @@ import Particles from "./Particles";
 
 class VoiceEqualizer {
   constructor(audioUrl) {
+    console.log("new EQ");
     this.canvas = document.querySelector(".eq-canvas");
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
     this.image = document.querySelector("#portrait-eq");
     this.imageWidth = this.image.getBoundingClientRect().width;
-    console.log(this.imageWidth)
+    console.log(this.imageWidth);
     this.testCounter = 0;
     this.circleRadius = this.imageWidth / 2 + 15;
     this.offsetEq = 10;
@@ -22,7 +23,7 @@ class VoiceEqualizer {
 
     // this.init();
     this.setUpCanvas();
-    this.setUpAudio.bind(this)
+    this.setUpAudio.bind(this);
   }
 
   setUpCanvas() {
@@ -171,10 +172,6 @@ class VoiceEqualizer {
   }
 }
 
-<<<<<<< HEAD
-new VoiceEqualizer("/sounds/shreksophone.mp3");
-=======
-export {VoiceEqualizer}
+export { VoiceEqualizer };
 
 // new VoiceEqualizer("/sounds/voice.mp3");
->>>>>>> origin/main
