@@ -2,6 +2,10 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import * as dat from "lil-gui";
 import gsap from "gsap";
 
@@ -9,35 +13,9 @@ import ee from "./utils/eventsSetUp";
 
 import fragmentShader from "../shaders/fragment.glsl";
 import vertexShader from "../shaders/vertex.glsl";
-import { LogLuvEncoding, MeshStandardMaterial } from "three";
 
-// /**
-//  * Base
-//  */
-// // Debug
-// const gui = new dat.GUI();
-
-// /**
-//  * Texture
-//  */
-// const textureLoader = new THREE.TextureLoader();
-
-//  * Axes Helper
-//  */
-// // const axesHelper = new THREE.AxesHelper(2);
-// // scene.add(axesHelper);
-
-// /**
-//  * Renderer
-//  */
-// const renderer = new THREE.WebGLRenderer({
-//   canvas: webglCanvas,
-//   alpha: true,
-// });
-// renderer.shadowMap.enabled = true;
-// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-// renderer.setSize(sizes.width, sizes.height);
-// renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+import liquidFragment from "../shaders/liquid/liquidFragment.glsl";
+import liquidVertex from "../shaders/liquid/liquidVertex.glsl";
 
 class ThreeScene {
   constructor() {
@@ -57,10 +35,17 @@ class ThreeScene {
       height: window.innerHeight,
     };
 
+    this.customUniforms = {
+      uTime: { value: 0 },
+      uTexture: { value: 0 },
+      uProgress: { value: 0 },
+    };
+
     this.debugParameters = {
       directionalLight1Color: 0xffffff,
       directionalLight2Color: 0xffffff,
       directionalLight3Color: 0xffffff,
+      liquidColor: 0xffd670,
     };
 
     this.setCamera();
@@ -68,6 +53,7 @@ class ThreeScene {
     this.setLights();
 
     this.setRenderer();
+    this.setPostProcess();
 
     this.loadEnvMap();
     this.loadTextures();
@@ -76,7 +62,7 @@ class ThreeScene {
     this.setListeners();
     this.setEmitters();
 
-    this.addSphere();
+    // this.addSphere();
 
     this.loop();
   }
@@ -121,10 +107,31 @@ class ThreeScene {
     //   "/images/glass/glassRoughness.jpg/"
     // );
     this.glassAmbient = textureLoader.load("/images/glass2/glassAmbient.png/");
+    // this.glassAmbient.encoding = THREE.sRGBEncoding;
     this.glassHeight = textureLoader.load("/images/glass2/glassHeight.png/");
+    // this.glassHeight.encoding = THREE.sRGBEncoding;
     this.glassNormal = textureLoader.load("/images/glass2/glassNormal.png/");
+    // this.glassNormal.encoding = THREE.sRGBEncoding;
 
     this.waterHeight = textureLoader.load("/images/textures/water.png/");
+    this.customUniforms.uTexture.value = this.waterHeight;
+    // this.waterHeight.encoding = THREE.sRGBEncoding;
+
+    this.bouchonBaseColor = textureLoader.load("/images/bouchon/albedo.png/");
+    // this.bouchonBaseColor.encoding = THREE.sRGBEncoding;
+    this.bouchonAmbient = textureLoader.load("/images/bouchon/ao.png/");
+    // this.bouchonAmbient.encoding = THREE.sRGBEncoding;
+    // this.bouchonHeight = textureLoader.load("/images/bouchon/bouchonHeight.png/");
+    this.bouchonNormal = textureLoader.load("/images/bouchon/normal.png/");
+    // this.bouchonNormal.encoding = THREE.sRGBEncoding;
+    this.bouchonRoughness = textureLoader.load("/images/bouchon/rough.png/");
+    // this.bouchonRoughness.encoding = THREE.sRGBEncoding;
+    this.bouchonMetalness = textureLoader.load("/images/bouchon/metal.png/");
+    // this.bouchonMetalness.encoding = THREE.sRGBEncoding;
+
+    // this.bouchonMatcap = textureLoader.load("/images/bouchon/goldMatCap.png/");
+    this.bouchonMatcap = textureLoader.load("/images/bouchon/goldMatCap2.png/");
+    // this.bouchonMatcap.encoding = THREE.sRGBEncoding;
   }
 
   loadModels() {
@@ -134,11 +141,13 @@ class ThreeScene {
     dracoLoader.setDecoderPath("/draco/");
     this.gltfLoader.setDRACOLoader(dracoLoader);
 
-    this.gltfLoader.load("/models/flacon.glb", (gltf) => {
-      const loadedFlacon = gltf.scene.children[0];
+    this.gltfLoader.load("/models/flacon2.glb", (gltf) => {
+      const flacon = gltf.scene.children[0];
+      const bouchon = gltf.scene.children[1];
 
       const glassMaterial = new THREE.MeshStandardMaterial({
         envMap: this.environmentMapTexture1,
+        envMapIntensity: 0.33,
         transparent: true,
         // opacity: 0.6,
         metalness: 0.99,
@@ -157,72 +166,184 @@ class ThreeScene {
         // this.glassRoughness,
       });
 
-      this.gui
-        .add(glassMaterial, "metalness")
-        .min(0)
-        .max(1)
-        .step(0.01)
-        .name("flacon metalness");
-      this.gui
-        .add(glassMaterial, "roughness")
-        .min(0)
-        .max(1)
-        .step(0.01)
-        .name("flacon roughness");
+      const flaconGeometry = flacon.geometry;
 
-      const flaconGeometry = loadedFlacon.geometry;
       flaconGeometry.setAttribute(
         "uv2",
         new THREE.BufferAttribute(flaconGeometry.attributes.uv.array, 2)
       );
 
-      this.flacon = new THREE.Mesh(flaconGeometry, glassMaterial);
+      //Flacon
+      flacon.material = glassMaterial;
+      flacon.material.depthWrite = false;
+      // flacon.material.opacity = 0.6;
+      flacon.material.opacity = 0;
+      // flacon.material.color = new THREE.Color("red");
+      // flacon.rotation.x = Math.PI * 0.5;
 
-      this.flacon.position.set(0, -1, 0);
+      //Liquid
+      this.liquid = flacon.clone();
+      this.liquid.material = glassMaterial.clone();
 
-      this.scene.add(this.flacon);
+      //Bouchon
+      const metalMaterial = new THREE.MeshStandardMaterial({
+        envMap: this.environmentMapTexture1,
+        metalness: 0.99,
+        roughness: 0,
+        map: this.bouchonBaseColor,
+        aoMap: this.bouchonAmbient,
+        aoMapIntensity: 0.7,
+        side: THREE.DoubleSide,
+        // color: new THREE.Color("#ffffff"),
+        normalMap: this.bouchonNormal,
+        roughnessMap: this.bouchonRoughness,
+        metalnessMap: this.bouchonMetalness,
+      });
 
-      this.flacon2 = new THREE.Mesh(flaconGeometry, glassMaterial.clone());
+      const metalMatcapMaterial = new THREE.MeshMatcapMaterial({
+        matcap: this.bouchonMatcap,
+      });
+      // bouchon.material = metalMaterial;
+      bouchon.material = metalMatcapMaterial;
 
-      this.flacon2.material.opacity = 0.2;
-      // this.flacon2.material.opacity = 0;
-      this.flacon2.material.displacementMap = this.waterHeight;
-      this.flacon2.material.displacementScale = 0.5;
-      this.flacon2.material.displacementBias = -0.35;
-      this.scene.add(this.flacon2);
+      this.liquid.material.onBeforeCompile = (shader) => {
+        console.log(shader);
 
-      this.flacon.material.color = new THREE.Color("white");
+        shader.uniforms.uTime = this.customUniforms.uTime;
+        shader.uniforms.uTexture = this.customUniforms.uTexture;
+        shader.uniforms.uProgress = this.customUniforms.uProgress;
 
-      // this.flacon2.rotation.y = Math.PI;
+        shader.vertexShader = shader.vertexShader.replace(
+          "#include <common>",
+          `
+          #include <common>
 
-      // mask.material.transparent = false;
-      // this.flacon2.material.transparent = false;
-      // this.flacon2.material.opacity = 0;
-      // this.flacon2.renderOrder = -1;
+          varying vec3 vPosition;
+          `
+        );
 
-      this.flacon2.position.set(0, -1, 0);
-      this.flacon2.scale.set(0.97, 0.97, 0.97);
-      // scaleY(this.flacon2, 0.1);
-      // this.flacon2.scale.y = 0.1;
+        shader.vertexShader = shader.vertexShader.replace(
+          "#include <begin_vertex>",
+          `
+          #include <begin_vertex>
 
-      this.flacon.material.depthWrite = false;
-      this.flacon.material.opacity = 0.99;
+          vPosition = position;
+          `
+        );
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <common>",
+          `
+          #include <common>
+
+          uniform sampler2D uTexture;
+          uniform float uProgress;
+
+          varying vec3 vPosition;
+          `
+        );
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <output_fragment>",
+          `
+          #ifdef OPAQUE
+          diffuseColor.a = 1.0;
+          #endif
+
+          // https://github.com/mrdoob/three.js/pull/22425
+          #ifdef USE_TRANSMISSION
+          diffuseColor.a *= transmissionAlpha + 0.1;
+          #endif
+          
+          vec4 displace = texture2D(uTexture, vUv);
+
+          float strength = step(1. - uProgress, vUv.y);
+
+          gl_FragColor = vec4( outgoingLight,  (strength + 0.4) / 1.4 );
+          `
+        );
+      };
+
+      this.liquid.material.opacity = 1;
+      // this.liquid.material.opacity = 0.6;
+      this.liquid.material.displacementMap = this.waterHeight;
+      this.liquid.material.color = new THREE.Color(
+        this.debugParameters.liquidColor
+      );
+      this.liquid.material.displacementScale = 0.5;
+      this.liquid.material.displacementBias = -0.35;
+      // this.scene.add(this.liquid);
+      this.liquid.scale.set(0.925, 0.925, 0.925);
+
+      this.flaconGroup = new THREE.Group();
+      this.flaconGroup.add(this.liquid);
+      this.flaconGroup.add(flacon);
+      this.flaconGroup.add(bouchon);
+      this.scene.add(this.flaconGroup);
+      this.flaconGroup.position.set(0, -2, 0);
 
       //DEBUG
-      this.gui
-        .add(this.flacon.material, "opacity")
+      this.flaconFolder = this.gui.addFolder("Flacon");
+      this.liquidFolder = this.gui.addFolder("Liquid");
+      this.bouchonFolder = this.gui.addFolder("Bouchon");
+
+      this.flaconFolder
+        .add(glassMaterial, "metalness")
+        .min(0)
+        .max(1)
+        .step(0.01)
+        .name("flacon metalness");
+      this.flaconFolder
+        .add(glassMaterial, "roughness")
+        .min(0)
+        .max(1)
+        .step(0.01)
+        .name("flacon roughness");
+      this.flaconFolder
+        .add(flacon.material, "opacity")
         .min(0)
         .max(1)
         .step(0.01)
         .name("flacon opacity");
-      this.gui
-        .add(this.flacon2.material, "opacity")
+
+      this.liquidFolder
+        .add(this.liquid.material, "opacity")
         .min(0)
         .max(1)
         .step(0.01)
         .name("liquide opacity");
 
-      console.log(this.flacon.material == this.flacon2.material);
+      this.liquidFolder
+        .addColor(this.debugParameters, "liquidColor")
+        .onChange(() => {
+          this.liquid.material.color.set(this.debugParameters.liquidColor);
+        });
+
+      this.bouchonFolder
+        .add(metalMaterial, "metalness")
+        .min(0)
+        .max(1)
+        .step(0.01)
+        .name("bouchon metalness");
+      this.bouchonFolder
+        .add(metalMaterial, "roughness")
+        .min(0)
+        .max(1)
+        .step(0.01)
+        .name("bouchon roughness");
+      this.bouchonFolder
+        .add(metalMaterial, "aoMapIntensity")
+        .min(0)
+        .max(1)
+        .step(0.01)
+        .name("bouchon aoMapIntensity");
+
+      this.gui
+        .add(this.customUniforms.uProgress, "value")
+        .min(0)
+        .max(1)
+        .step(0.001)
+        .name("Shader Progress");
     });
   }
 
@@ -254,7 +375,7 @@ class ThreeScene {
 
     this.gui
       .add(directionalLight, "intensity")
-      .min(-10)
+      .min(0)
       .max(10)
       .step(0.1)
       .name("directionalLight1 intensity");
@@ -289,7 +410,7 @@ class ThreeScene {
 
     this.gui
       .add(directionalLight2, "intensity")
-      .min(-10)
+      .min(0)
       .max(10)
       .step(0.1)
       .name("directionalLight2 intensity");
@@ -326,7 +447,7 @@ class ThreeScene {
 
     this.gui
       .add(directionalLight3, "intensity")
-      .min(-10)
+      .min(0)
       .max(10)
       .step(0.1)
       .name("directionalLight3 intensity");
@@ -383,11 +504,75 @@ class ThreeScene {
 
   setRenderer() {
     this.renderer = new THREE.WebGLRenderer({
-      canvas: this.webglCanvas,
       alpha: true,
+      canvas: this.webglCanvas,
+      // powerPreference: "high-performance",
+      antialias: true,
     });
+    this.renderer.physicallyCorrectLights = true;
+    //Load background texture
+    const loader = new THREE.TextureLoader();
+    // loader.load(
+    //   "https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg",
+    //   function (texture) {
+    //     this.scene.background = texture;
+    //     texture.wrapS = THREE.MirroredRepeatWrapping;
+    //     texture.wrapT = THREE.MirroredRepeatWrapping;
+    //   }
+    // );
+
+    const bgTexture = loader.load(
+      "/images/textures/bg-object.png/",
+      function (texture) {
+        var img = texture.image;
+        // bgWidth = img.width;
+        // bgHeight = img.height;
+        // resize();
+      }
+    );
+    this.scene.background = bgTexture;
+    bgTexture.wrapS = THREE.MirroredRepeatWrapping;
+    bgTexture.wrapT = THREE.MirroredRepeatWrapping;
+
+    // this.renderer.outputEncoding = THREE.sRGBEncoding;
+    // this.renderer.gammaFactor = 2.2;
+    // this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    // this.renderer.toneMappingExposure = 1;
+    // this.renderer.stencil = false;
+    // this.renderer.preserveDrawingBuffer = false;
+    // this.renderer.depth = false;
+
+    // this.renderer.gammaOutput = true;
+    // this.renderer.gammaFactor = 0.1;
+
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  }
+
+  setPostProcess() {
+    /**
+     * Post processing
+     */
+    this.effectComposer = new EffectComposer(this.renderer);
+    this.effectComposer.setSize(this.sizes.width, this.sizes.height);
+    this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const renderPass = new RenderPass(this.scene, this.camera);
+    this.effectComposer.addPass(renderPass);
+
+    const unrealBloomPass = new UnrealBloomPass();
+    this.effectComposer.addPass(unrealBloomPass);
+
+    unrealBloomPass.strength = 0.3;
+    unrealBloomPass.radius = 1;
+    unrealBloomPass.threshold = 0.6;
+
+    this.postBloom = this.gui.addFolder("Bloom");
+
+    this.postBloom.add(unrealBloomPass, "enabled");
+    this.postBloom.add(unrealBloomPass, "strength").min(0).max(2).step(0.001);
+    this.postBloom.add(unrealBloomPass, "radius").min(0).max(2).step(0.001);
+    this.postBloom.add(unrealBloomPass, "threshold").min(0).max(1).step(0.001);
   }
 
   setListeners() {
@@ -403,6 +588,8 @@ class ThreeScene {
       // Update renderer
       this.renderer.setSize(this.sizes.width, this.sizes.height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      this.effectComposer.setSize(this.sizes.width, this.sizes.height);
     });
   }
 
@@ -412,8 +599,12 @@ class ThreeScene {
     //   cylinderMaterial.uniforms.uMouse.value[0] = mouse.x;
     //   cylinderMaterial.uniforms.uMouse.value[1] = mouse.y;
 
-    this.sphere.rotation.y = elapsedTime * 0.5;
+    if (this.sphere) this.sphere.rotation.y = elapsedTime * 0.5;
+    if (this.flaconGroup) this.flaconGroup.rotation.y = elapsedTime * 0.5;
     // sphere.rotation.z = Math.cos(elapsedTime);
+
+    //Update material
+    this.customUniforms.uTime.value = elapsedTime;
 
     // Update controls
     this.controls.update();
@@ -421,21 +612,11 @@ class ThreeScene {
     // Render
     this.renderer.render(this.scene, this.camera);
 
+    this.effectComposer.render();
+
     // Call tick again on the next frame
     requestAnimationFrame(this.loop.bind(this));
   }
 }
 
 new ThreeScene();
-
-function scaleY(mesh, scale) {
-  mesh.scale.y = scale;
-  // if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
-  var height =
-    mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y;
-  //height is here the native height of the geometry
-  //that does not change with scaling.
-  //So we need to multiply with scale again
-  console.log((height * scale) / 2);
-  mesh.position.y = (height * scale) / 2 - height + ((height * scale) / 2) * 2;
-}
