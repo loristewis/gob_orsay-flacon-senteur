@@ -45,7 +45,7 @@ export default class ThreeScene {
       directionalLight1Color: 0xffffff,
       directionalLight2Color: 0xffffff,
       directionalLight3Color: 0xffffff,
-      liquidColor: 0xbd5500,
+      liquidColor: 0xbc9b24,
     };
 
     this.setCamera();
@@ -155,6 +155,11 @@ export default class ThreeScene {
 
   fillFlacon() {
     const animDuration = 1500;
+
+    const fillSound = new Audio("/sounds/fillSound.mp3");
+    fillSound.volume = 0.15;
+
+    fillSound.play();
 
     gsap.to(this.customUniforms.uProgress, {
       value: 1,
@@ -664,18 +669,22 @@ export default class ThreeScene {
 
   setEmitters() {
     ee.on("fillFlacon", () => {
+      console.log("fillFlacon on emit");
       this.fillFlacon();
     });
 
     ee.on("hideFlacon", () => {
+      console.log("hideFlacon on emit");
       this.hideFlacon();
     });
 
     ee.on("addBouchon", () => {
+      console.log("addBouchon on emit");
       this.addBouchon();
     });
 
     ee.on("finalPosition", () => {
+      console.log("finalPosition on emit");
       this.finalPosition();
     });
   }
@@ -700,7 +709,7 @@ export default class ThreeScene {
     // );
 
     const bgTexture = loader.load(
-      "/images/textures/bg-object.png/",
+      "/images/textures/bg-object2.png/",
       function (texture) {
         var img = texture.image;
         // bgWidth = img.width;

@@ -71,7 +71,8 @@ export const PAGES = [
     name: "Flacon_02",
     audio: "F_02",
     footer: {
-      subtitles: "Bien joué mon cher !",
+      // subtitles: "Bien joué mon cher !",
+      subtitles: "Élémentaire, n'est-ce pas ?",
     },
   },
   {
@@ -97,7 +98,8 @@ export const PAGES = [
     name: "Parfum_02",
     audio: "P_02",
     footer: {
-      subtitles: "Humm ça sent bon !",
+      // subtitles: "Humm ça sent bon !",
+      subtitles: "Humm, quelle réussite !",
     },
   },
   {
@@ -120,7 +122,8 @@ export const PAGES = [
     name: "Bouchon_02",
     audio: "B_02",
     footer: {
-      subtitles: "Chapeau l’artiste !",
+      // subtitles: "Chapeau l’artiste !",
+      subtitles: "Bien joué ! Je n'aurais pas mieux fait.",
     },
   },
   {

@@ -127,7 +127,7 @@ export default class Scene2D {
       );
     }, 1);
     this.ctx.restore();
-
+    console.log("end drawing");
     this.drawType == "flacon"
       ? ee.emit("drawingCompleted", "flacon")
       : ee.emit("drawingCompleted", "bouchon");

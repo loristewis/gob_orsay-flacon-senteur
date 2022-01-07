@@ -134,13 +134,18 @@ const updatePage = () => {
   //FILL FLACON
   document.addEventListener("click", (e) => {
     if (e.target !== document.getElementById("next") && currentPageId == 10) {
+      console.log("go emit fillFlacon");
       ee.emit("fillFlacon", "flacon the flacon");
     }
   });
 
   //EVENT LISTENERS
   ee.on("drawingCompleted", (info) => {
+    console.log("drawingCompleted");
     if (info == "flacon" && currentPageId == 7) {
+      const successSound = new Audio("/sounds/successSound2.mp3");
+      successSound.volume = 0.1;
+      successSound.play();
       drawCanvas.style.zIndex = -1;
       // webglCanvas.style.zIndex = 999;
 
@@ -152,6 +157,9 @@ const updatePage = () => {
       canvas3dInstance.addGroup();
       updatePage();
     } else if (info == "bouchon" && currentPageId == 13) {
+      const successSound = new Audio("/sounds/successSound.wav");
+      successSound.volume = 0.1;
+      successSound.play();
       drawCanvas.style.zIndex = -1;
       canvasDrawingInstance = null;
       ee.emit("addBouchon");
@@ -160,7 +168,6 @@ const updatePage = () => {
     // console.log(info);
   });
   ee.on("fillFlaconSuccess", () => {
-    console.log("yayo");
     if (!flaconFilled) {
       flaconFilled = true;
       updatePage();
@@ -178,7 +185,8 @@ const updatePage = () => {
     );
     canvasDrawingInstance.init();
   });
-
+  if (currentPageId == 16)
+    document.getElementById("next").style.display = "none";
   /**
    * POUR CHAQUE PAGE - SOUS-TITRES
    */
@@ -207,15 +215,36 @@ const updatePage = () => {
 document.addEventListener(
   "DOMContentLoaded",
   function () {
-    currentPageId = -1;
-    // TODO DELETE
-    // currentPageId = 6;
-    if (currentPageId <= 15) updatePage();
+    const welcomeScreen = document.getElementById("welcome-screen");
+    const contentScreen = document.getElementById("content-screen");
 
     const nextButton = document.getElementById("next");
     const welcomeButton = document.getElementById("start-button");
-    nextButton.onclick = updatePage;
-    welcomeButton.onclick = updatePage;
+
+    currentPageId = -1;
+    // TODO DELETE
+    // currentPageId = 6;
+    if (currentPageId <= 15) {
+      updatePage();
+    }
+
+    const nextpage = () => {
+      console.log("intro next");
+      updatePage();
+      const successSound = new Audio("/sounds/clickSound.wav");
+      successSound.volume = 0.5;
+      successSound.play();
+    };
+
+    nextButton.addEventListener("click", nextpage);
+    welcomeButton.addEventListener("click", () => {
+      welcomeScreen.style.display = "none";
+      contentScreen.style.visibility = "visible";
+      updatePage();
+      const successSound = new Audio("/sounds/clickSound.wav");
+      successSound.volume = 0.5;
+      successSound.play();
+    });
   },
   false
 );

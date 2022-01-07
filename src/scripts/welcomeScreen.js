@@ -16,10 +16,10 @@ document.addEventListener(
       titleScreen.style.visibility = "visible";
     };
 
-    titleScreen.onclick = () => {
-      welcomeScreen.style.display = "none";
-      contentScreen.style.visibility = "visible";
-    };
+    // titleScreen.onclick = () => {
+    //   welcomeScreen.style.display = "none";
+    //   contentScreen.style.visibility = "visible";
+    // };
 
     /** DEBUG - ACCÈS DIRECT CONTENU */
     // welcomeScreen.style.display = "none";
