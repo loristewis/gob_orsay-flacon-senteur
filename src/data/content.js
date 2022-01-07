@@ -134,6 +134,7 @@ export const PAGES = [
   },
   {
     name: "Modelisation_3D",
+    audio: "3d_01",
     footer: {
       subtitles:
         "Et bien mon ami, quelle maestria ! \n" +

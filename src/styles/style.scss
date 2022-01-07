@@ -159,7 +159,8 @@ section {
 
     nav {
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
+      justify-content: center;
 
       position: fixed;
       top: 0;
@@ -247,6 +248,7 @@ section {
         align-items: center;
         justify-content: center;
         gap: 24px;
+        text-align: center;
 
         p {
           max-width: 50ch;
@@ -256,6 +258,28 @@ section {
         }
       }
     }
+  }
+}
+
+#next {
+  position: fixed;
+  background: transparent;
+  // right: 5.55vw;
+  right: 40px;
+  // top: calc(98.11vh - 31px);
+  bottom: calc(60px);
+  transform: translateY(-50%);
+  z-index: 5;
+  padding: 25px 30px;
+  // height: 62px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
   }
 }
 
@@ -282,9 +306,10 @@ section {
 
 .eq-canvas {
   /* background-color: royalblue; */
+  pointer-events: none;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 15;
 }

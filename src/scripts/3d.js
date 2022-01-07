@@ -23,7 +23,7 @@ export default class ThreeScene {
     this.webglCanvas = document.querySelector("canvas.webgl");
 
     this.gui = new dat.GUI();
-    // document.querySelector(".lil-gui").style.display = "none";
+    document.querySelector(".lil-gui").style.display = "none";
 
     // Scene
     this.scene = new THREE.Scene();

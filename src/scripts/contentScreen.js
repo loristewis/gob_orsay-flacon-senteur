@@ -207,10 +207,10 @@ const updatePage = () => {
 document.addEventListener(
   "DOMContentLoaded",
   function () {
-    // currentPageId = -1;
+    currentPageId = -1;
     // TODO DELETE
-    currentPageId = 6;
-    if (currentPageId <= 16) updatePage();
+    // currentPageId = 6;
+    if (currentPageId <= 15) updatePage();
 
     const nextButton = document.getElementById("next");
     const welcomeButton = document.getElementById("start-button");
