@@ -7,6 +7,7 @@ class VoiceEqualizer {
     this.canvas.height = window.innerHeight;
 
     this.pageId = pageId;
+    console.log("eq page id", this.pageId);
 
     this.image = document.querySelector("#portrait-eq");
     this.imageWidth = this.image.getBoundingClientRect().width;

@@ -7,11 +7,7 @@ export default class Scene2D {
     this.drawCanvas = document.querySelector("canvas.draw-canvas");
     this.drawCanvas.width = window.innerWidth;
     this.drawCanvas.height = window.innerHeight;
-    console.log(this.drawCanvas);
     this.ctx = this.drawCanvas.getContext("2d");
-    this.ctx.rect(50, 50, 200, 200);
-    this.ctx.fillStyle = "red";
-    this.ctx.fill();
 
     this.drawCompleted = false;
 
@@ -45,7 +41,7 @@ export default class Scene2D {
   drawFigure() {
     this.figure = new Path2D(this.figurePath);
     // this.ctx.fillStyle = "#F2EFEB";
-    this.ctx.fillStyle = "blue";
+    this.ctx.fillStyle = "#525759";
     this.ctx.clip(this.figure);
     this.ctx.fill(this.figure);
   }
@@ -64,7 +60,6 @@ export default class Scene2D {
   }
   draw(event) {
     let { clientX, clientY } = event;
-
     if (
       this.ctx.isPointInPath(this.figure, clientX, clientY) &&
       !this.drawCompleted
@@ -76,7 +71,6 @@ export default class Scene2D {
         Math.abs(this.prevPos.y - this.currentPos.y) > this.drawThreshold
       ) {
         this.prevPos.y = this.currentPos.y;
-        console.log(this.colorProgress);
         this.colorProgress++;
       }
 
@@ -87,9 +81,9 @@ export default class Scene2D {
       this.currentPos.y = this.coord.y;
 
       this.ctx.beginPath();
-      this.ctx.lineWidth = 75;
+      this.ctx.lineWidth = 40;
       this.ctx.lineCap = "round";
-      this.ctx.strokeStyle = "purple";
+      this.ctx.strokeStyle = "white";
       this.ctx.moveTo(this.coord.x, this.coord.y);
       this.reposition(event);
 
@@ -124,7 +118,7 @@ export default class Scene2D {
       );
     }, 1);
     this.ctx.restore();
-    ee.emit("drawingCompleted", "end drawing");
+    ee.emit("drawingCompleted", "flacon drawing end");
   }
 }
 

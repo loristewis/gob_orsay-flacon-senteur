@@ -23,7 +23,7 @@ export default class ThreeScene {
     this.webglCanvas = document.querySelector("canvas.webgl");
 
     this.gui = new dat.GUI();
-    console.log(this.gui);
+    document.querySelector(".lil-gui").style.display = "none";
 
     // Scene
     this.scene = new THREE.Scene();
@@ -63,8 +63,40 @@ export default class ThreeScene {
     this.setEmitters();
 
     // this.addSphere();
+    // this.addGroup();
 
     this.loop();
+  }
+
+  addGroup() {
+    this.scene.add(this.flaconGroup);
+    gsap.to(this.flaconGroup.scale, {
+      x: 1,
+      y: 1,
+      z: 1,
+      duration: 0.5,
+      delay: 0.25,
+      ease: "power4",
+    });
+  }
+
+  addBouchon() {
+    gsap.to(this.bouchon, {
+      x: 1,
+      y: 1,
+      z: 1,
+      duration: 0.5,
+      delay: 0.25,
+      ease: "power4",
+    });
+  }
+
+  fillFlacon() {
+    gsap.to(this.customUniforms.uProgress, {
+      value: 1,
+      duration: 1,
+      ease: "power4",
+    });
   }
 
   addSphere() {
@@ -143,7 +175,7 @@ export default class ThreeScene {
 
     this.gltfLoader.load("/models/flacon2.glb", (gltf) => {
       const flacon = gltf.scene.children[0];
-      const bouchon = gltf.scene.children[1];
+      this.bouchon = gltf.scene.children[1];
 
       const glassMaterial = new THREE.MeshStandardMaterial({
         envMap: this.environmentMapTexture1,
@@ -204,11 +236,9 @@ export default class ThreeScene {
         matcap: this.bouchonMatcap,
       });
       // bouchon.material = metalMaterial;
-      bouchon.material = metalMatcapMaterial;
+      this.bouchon.material = metalMatcapMaterial;
 
       this.liquid.material.onBeforeCompile = (shader) => {
-        console.log(shader);
-
         shader.uniforms.uTime = this.customUniforms.uTime;
         shader.uniforms.uTexture = this.customUniforms.uTexture;
         shader.uniforms.uProgress = this.customUniforms.uProgress;
@@ -278,9 +308,14 @@ export default class ThreeScene {
       this.flaconGroup = new THREE.Group();
       this.flaconGroup.add(this.liquid);
       this.flaconGroup.add(flacon);
-      this.flaconGroup.add(bouchon);
-      this.scene.add(this.flaconGroup);
+      this.flaconGroup.add(this.bouchon);
+
       this.flaconGroup.position.set(0, -2, 0);
+
+      // INITIAL SIZE
+      this.flaconGroup.scale.set(0, 0, 0);
+      this.flaconGroup.scale.set(0, 0, 0);
+      this.bouchon.scale.set(0, 0, 0);
 
       //DEBUG
       this.flaconFolder = this.gui.addFolder("Flacon");
@@ -512,14 +547,8 @@ export default class ThreeScene {
   }
 
   setEmitters() {
-    ee.on("drawingCompleted", () => {
-      gsap.to(sphere.scale, {
-        x: 1.2,
-        y: 1.2,
-        z: 1.2,
-        duration: 1,
-        ease: "power4",
-      });
+    ee.on("fillFlacon", () => {
+      this.fillFlacon();
     });
   }
 
@@ -640,4 +669,4 @@ export default class ThreeScene {
   }
 }
 
-new ThreeScene();
+// new ThreeScene();
