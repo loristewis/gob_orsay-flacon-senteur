@@ -21,9 +21,16 @@ document.addEventListener(
     //   contentScreen.style.visibility = "visible";
     // };
 
+<<<<<<< HEAD
     /** DEBUG - ACCÈS DIRECT CONTENU */
     // welcomeScreen.style.display = "none";
     // contentScreen.style.visibility = "visible";
   },
   false
 );
+=======
+	/** DEBUG - ACCÈS DIRECT CONTENU */
+	// welcomeScreen.style.display = "none";	contentScreen.style.visibility = "visible"
+
+}, false);
+>>>>>>> 6013ad794cccef0ba306c2c638f3ec92ac163cc3

@@ -228,7 +228,7 @@ section {
       height: $footerHeight;
       min-height: $footerHeight;
       max-height: $footerHeight;
-      padding: 0 96px 96px;
+      padding: 0 120px 72px;
 
       &__title {
         margin-bottom: 16px;
@@ -287,6 +287,18 @@ section {
 
 .bagerich {
   @include bagerich;
+}
+
+#next {
+  position: fixed;
+  right: 48px;
+  bottom: 48px;
+  z-index: 5;
+  width: 62px;
+  height: 62px;
+  border: none;
+  background: url('./images/next.png') no-repeat center center;
+  background-size: contain;
 }
 
 .webgl {
