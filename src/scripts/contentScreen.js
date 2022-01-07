@@ -241,8 +241,9 @@ document.addEventListener(
       welcomeScreen.style.display = "none";
       contentScreen.style.visibility = "visible";
       updatePage();
-      const successSound = new Audio("/sounds/clickSound.wav");
-      successSound.volume = 0.5;
+      const successSound = new Audio("/sounds/music.mp3");
+      successSound.volume = 0.1;
+      successSound.loop = true;
       successSound.play();
     });
   },
