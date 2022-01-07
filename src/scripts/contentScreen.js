@@ -9,6 +9,7 @@ const footer = document.getElementById("content-screen-footer");
 const userInterface = document.getElementById("content-screen");
 
 const drawCanvas = document.querySelector("canvas.draw-canvas");
+const audioCanvas = document.querySelector("canvas.eq-canvas");
 const webglCanvas = document.querySelector("canvas.webgl");
 
 const Narration = document.getElementById("Narration");
@@ -108,6 +109,7 @@ const updatePage = () => {
       `/sounds/${page.audio}.mp3`,
       currentPageId
     );
+    if (currentPageId > 4) audioCanvas.style.zIndex = -2;
   }
 
   //HANDLE CANVAS DRAWING
@@ -124,6 +126,11 @@ const updatePage = () => {
     canvasDrawingInstance.init();
   }
 
+  if (currentPageId === 16) {
+    userInterface.style.pointerEvents = "none";
+    ee.emit("finalPosition");
+  }
+
   //FILL FLACON
   document.addEventListener("click", (e) => {
     if (e.target !== document.getElementById("next") && currentPageId == 10) {
@@ -133,7 +140,6 @@ const updatePage = () => {
 
   //EVENT LISTENERS
   ee.on("drawingCompleted", (info) => {
-    console.log("event received");
     if (info == "flacon" && currentPageId == 7) {
       drawCanvas.style.zIndex = -1;
       // webglCanvas.style.zIndex = 999;
@@ -148,6 +154,7 @@ const updatePage = () => {
     } else if (info == "bouchon" && currentPageId == 13) {
       drawCanvas.style.zIndex = -1;
       canvasDrawingInstance = null;
+      ee.emit("addBouchon");
       updatePage();
     }
     // console.log(info);
@@ -203,7 +210,7 @@ document.addEventListener(
     // currentPageId = -1;
     // TODO DELETE
     currentPageId = 6;
-    updatePage();
+    if (currentPageId <= 16) updatePage();
 
     const nextButton = document.getElementById("next");
     const welcomeButton = document.getElementById("start-button");

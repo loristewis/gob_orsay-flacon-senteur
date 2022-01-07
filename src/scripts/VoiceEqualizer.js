@@ -48,7 +48,8 @@ class VoiceEqualizer {
     this.isPlaying = false;
 
     this.audio.src = this.audioUrl;
-    this.audio.muted = false;
+    //TODO PUT IT FALSE
+    this.audio.muted = true;
     this.audio.autoplay = false;
 
     this.audio.addEventListener("loadeddata", () => {

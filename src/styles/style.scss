@@ -148,6 +148,8 @@ section {
   }
 
   &#content-screen {
+    position: relative;
+    z-index: 10;
     // visibility: hidden;
     background: url("./images/main_screen.png") no-repeat center center fixed;
     background-size: cover;
@@ -262,11 +264,11 @@ section {
 }
 
 .webgl {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   outline: none;
-  z-index: -1;
+  z-index: 1;
 }
 
 .draw-canvas {

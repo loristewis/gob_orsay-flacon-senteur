@@ -106,7 +106,6 @@ export default class Scene2D {
   }
 
   drawingCompleted() {
-    console.log("drawingCompleted");
     document.removeEventListener("mousemove", this.draw);
     document.removeEventListener("mousedown", this.startDrawing.bind(this));
     document.removeEventListener("mouseup", this.stopDrawing.bind(this));

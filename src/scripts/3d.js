@@ -23,7 +23,7 @@ export default class ThreeScene {
     this.webglCanvas = document.querySelector("canvas.webgl");
 
     this.gui = new dat.GUI();
-    document.querySelector(".lil-gui").style.display = "none";
+    // document.querySelector(".lil-gui").style.display = "none";
 
     // Scene
     this.scene = new THREE.Scene();
@@ -62,7 +62,6 @@ export default class ThreeScene {
     this.setListeners();
     this.setEmitters();
 
-    // this.addSphere();
     // this.addGroup();
 
     this.loop();
@@ -78,15 +77,78 @@ export default class ThreeScene {
       delay: 0.25,
       ease: "power4",
     });
+    // console.log(this.flaconGroup);
+    // setTimeout(() => {
+    //   this.bouchon.scale.set(
+    //     7.846205711364746,
+    //     7.846205711364746,
+    //     7.846205711364746
+    //   );
+    // }, 2000);
   }
 
-  addBouchon() {
-    gsap.to(this.bouchon, {
+  finalPosition() {
+    const tl = new gsap.timeline();
+    tl.to(this.bouchon.position, {
+      y: 10,
+      duration: 1,
+      ease: "power4",
+      onComplete: () => console.log("animEnd"),
+    });
+    //Liquid was hidden
+    tl.set(this.liquid.scale, {
       x: 1,
       y: 1,
       z: 1,
+    });
+    tl.set(this.bouchon.scale, {
+      x: this.ogBouchonScale,
+      y: this.ogBouchonScale,
+      z: this.ogBouchonScale,
+    });
+    tl.to(
+      this.flacon.material,
+      {
+        opacity: 1,
+        // opacity: 0.2,
+        duration: 1,
+        ease: "power4",
+      },
+      "end"
+    );
+    tl.to(
+      this.bouchon.position,
+      {
+        y: 3.39,
+        duration: 1,
+        ease: "power4",
+      },
+      "end"
+    );
+  }
+
+  addBouchon() {
+    // gsap.to(this.bouchon.material, {
+    //   opacity: 1,
+    //   duration: 0.5,
+    //   delay: 0.25,
+    //   ease: "power4",
+    // });
+    this.bouchon.position.y = 2.16;
+    gsap.to(this.bouchon.scale, {
+      x: this.ogBouchonScale + 1,
+      y: this.ogBouchonScale + 1,
+      z: this.ogBouchonScale + 1,
       duration: 0.5,
       delay: 0.25,
+      ease: "power4",
+    });
+
+    gsap.to(this.flaconGroup.scale, {
+      x: 1,
+      y: 1,
+      z: 1,
+      duration: 2,
       ease: "power4",
     });
   }
@@ -122,24 +184,11 @@ export default class ThreeScene {
     });
     gsap.to(this.flacon.material, {
       opacity: 0,
+      // opacity: 0.2,
       duration: 0.5,
       onComplete: () => ee.emit("drawBouchon", "draw bouchon"),
       ease: "power4",
     });
-  }
-
-  addSphere() {
-    this.sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 20, 20),
-      new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        wireframe: true,
-      })
-    );
-    // this.sphere.scale.set(0, 0, 0);
-    this.sphere.scale.set(2, 2, 2);
-    this.sphere.position.z = -5;
-    this.scene.add(this.sphere);
   }
 
   loadEnvMap() {
@@ -204,8 +253,11 @@ export default class ThreeScene {
 
     this.gltfLoader.load("/models/flacon2.glb", (gltf) => {
       this.flacon = gltf.scene.children[0];
-      this.bouchon = gltf.scene.children[1];
 
+      this.bouchon = gltf.scene.children[1];
+      this.ogBouchonScale = this.bouchon.scale.x;
+
+      console.log(this.flacon, this.bouchon);
       const glassMaterial = new THREE.MeshStandardMaterial({
         envMap: this.environmentMapTexture1,
         envMapIntensity: 0.33,
@@ -339,10 +391,9 @@ export default class ThreeScene {
       this.flaconGroup.add(this.flacon);
       this.flaconGroup.add(this.bouchon);
 
-      this.flaconGroup.position.set(0, -2, 0);
+      this.flaconGroup.position.set(0, -2.5, 0);
 
       // INITIAL SIZE
-      this.flaconGroup.scale.set(0, 0, 0);
       this.flaconGroup.scale.set(0, 0, 0);
       this.bouchon.scale.set(0, 0, 0);
 
@@ -401,6 +452,42 @@ export default class ThreeScene {
         .max(1)
         .step(0.01)
         .name("bouchon aoMapIntensity");
+      this.bouchonFolder
+        .add(this.bouchon.position, "x")
+        .min(-10)
+        .max(10)
+        .step(0.01)
+        .name("bouchon position x");
+      this.bouchonFolder
+        .add(this.bouchon.position, "y")
+        .min(-10)
+        .max(10)
+        .step(0.01)
+        .name("bouchon position y");
+      this.bouchonFolder
+        .add(this.bouchon.position, "z")
+        .min(-10)
+        .max(10)
+        .step(0.01)
+        .name("bouchon position z");
+      this.bouchonFolder
+        .add(this.bouchon.scale, "x")
+        .min(-20)
+        .max(20)
+        .step(0.01)
+        .name("bouchon scale x");
+      this.bouchonFolder
+        .add(this.bouchon.scale, "y")
+        .min(-20)
+        .max(20)
+        .step(0.01)
+        .name("bouchon scale y");
+      this.bouchonFolder
+        .add(this.bouchon.scale, "z")
+        .min(-20)
+        .max(20)
+        .step(0.01)
+        .name("bouchon scale z");
 
       this.gui
         .add(this.customUniforms.uProgress, "value")
@@ -419,7 +506,7 @@ export default class ThreeScene {
       10
     );
     this.camera.position.y = 0.905;
-    this.camera.position.z = 5;
+    this.camera.position.z = 7.2;
     this.scene.add(this.camera);
 
     this.cameraFolder = this.gui.addFolder("Camera");
@@ -582,6 +669,14 @@ export default class ThreeScene {
 
     ee.on("hideFlacon", () => {
       this.hideFlacon();
+    });
+
+    ee.on("addBouchon", () => {
+      this.addBouchon();
+    });
+
+    ee.on("finalPosition", () => {
+      this.finalPosition();
     });
   }
 
