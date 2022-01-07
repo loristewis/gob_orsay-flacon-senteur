@@ -27,6 +27,9 @@ Maestria.style.display = "none";
 let currentPageId;
 let audioVoiceInstance, canvasDrawingInstance, canvas3dInstance;
 
+//TODO find better solution
+let flaconFilled = false;
+
 canvas3dInstance = new Scene3D();
 
 // const audio = document.createElement('audio')
@@ -115,7 +118,8 @@ const updatePage = () => {
       svgPath.flacon,
       window.innerWidth * 0.07,
       200,
-      20
+      20,
+      "flacon"
     );
     canvasDrawingInstance.init();
   }
@@ -124,17 +128,13 @@ const updatePage = () => {
   document.addEventListener("click", (e) => {
     if (e.target !== document.getElementById("next") && currentPageId == 10) {
       ee.emit("fillFlacon", "flacon the flacon");
-      setTimeout(() => {
-        updatePage();
-        //fillFlacon animation duration + 0.2
-      }, 1200);
     }
   });
 
   //EVENT LISTENERS
   ee.on("drawingCompleted", (info) => {
     console.log("event received");
-    if (info == "flacon drawing end" && currentPageId == 7) {
+    if (info == "flacon" && currentPageId == 7) {
       drawCanvas.style.zIndex = -1;
       // webglCanvas.style.zIndex = 999;
 
@@ -145,8 +145,31 @@ const updatePage = () => {
       canvasDrawingInstance = null;
       canvas3dInstance.addGroup();
       updatePage();
+    } else if (info == "bouchon" && currentPageId == 13) {
+      drawCanvas.style.zIndex = -1;
+      canvasDrawingInstance = null;
+      updatePage();
     }
     // console.log(info);
+  });
+  ee.on("fillFlaconSuccess", () => {
+    console.log("yayo");
+    if (!flaconFilled) {
+      flaconFilled = true;
+      updatePage();
+    }
+  });
+  if (currentPageId == 13) ee.emit("hideFlacon");
+  ee.on("drawBouchon", () => {
+    drawCanvas.style.zIndex = 999;
+    canvasDrawingInstance = new Scene2D(
+      svgPath.bouchon,
+      window.innerWidth * 0.07,
+      50,
+      7,
+      "bouchon"
+    );
+    canvasDrawingInstance.init();
   });
 
   /**

@@ -92,9 +92,38 @@ export default class ThreeScene {
   }
 
   fillFlacon() {
+    const animDuration = 1500;
+
     gsap.to(this.customUniforms.uProgress, {
       value: 1,
-      duration: 1,
+      //animation start sooner than its end
+      duration: animDuration / 1000 + 4,
+      ease: "power4",
+    });
+
+    setTimeout(() => {
+      ee.emit("fillFlaconSuccess", "flacon has been filled");
+    }, animDuration);
+  }
+
+  hideFlacon() {
+    gsap.to(this.flaconGroup.scale, {
+      x: 0,
+      y: 0,
+      z: 0,
+      duration: 2,
+      ease: "power4",
+    });
+    //Liquid can't fade out like flacon bc opacity is in the custom shader
+    gsap.set(this.liquid.scale, {
+      x: 0,
+      y: 0,
+      z: 0,
+    });
+    gsap.to(this.flacon.material, {
+      opacity: 0,
+      duration: 0.5,
+      onComplete: () => ee.emit("drawBouchon", "draw bouchon"),
       ease: "power4",
     });
   }
@@ -174,7 +203,7 @@ export default class ThreeScene {
     this.gltfLoader.setDRACOLoader(dracoLoader);
 
     this.gltfLoader.load("/models/flacon2.glb", (gltf) => {
-      const flacon = gltf.scene.children[0];
+      this.flacon = gltf.scene.children[0];
       this.bouchon = gltf.scene.children[1];
 
       const glassMaterial = new THREE.MeshStandardMaterial({
@@ -198,7 +227,7 @@ export default class ThreeScene {
         // this.glassRoughness,
       });
 
-      const flaconGeometry = flacon.geometry;
+      const flaconGeometry = this.flacon.geometry;
 
       flaconGeometry.setAttribute(
         "uv2",
@@ -206,15 +235,15 @@ export default class ThreeScene {
       );
 
       //Flacon
-      flacon.material = glassMaterial;
-      flacon.material.depthWrite = false;
-      flacon.material.opacity = 0.6;
-      // flacon.material.opacity = 0;
-      // flacon.material.color = new THREE.Color("red");
-      flacon.rotation.y = Math.PI * 0.5;
+      this.flacon.material = glassMaterial;
+      this.flacon.material.depthWrite = false;
+      this.flacon.material.opacity = 0.6;
+      // this.flacon.material.opacity = 0;
+      // this.flacon.material.color = new THREE.Color("red");
+      this.flacon.rotation.y = Math.PI * 0.5;
 
       //Liquid
-      this.liquid = flacon.clone();
+      this.liquid = this.flacon.clone();
       this.liquid.material = glassMaterial.clone();
 
       //Bouchon
@@ -307,7 +336,7 @@ export default class ThreeScene {
 
       this.flaconGroup = new THREE.Group();
       this.flaconGroup.add(this.liquid);
-      this.flaconGroup.add(flacon);
+      this.flaconGroup.add(this.flacon);
       this.flaconGroup.add(this.bouchon);
 
       this.flaconGroup.position.set(0, -2, 0);
@@ -335,7 +364,7 @@ export default class ThreeScene {
         .step(0.01)
         .name("flacon roughness");
       this.flaconFolder
-        .add(flacon.material, "opacity")
+        .add(this.flacon.material, "opacity")
         .min(0)
         .max(1)
         .step(0.01)
@@ -549,6 +578,10 @@ export default class ThreeScene {
   setEmitters() {
     ee.on("fillFlacon", () => {
       this.fillFlacon();
+    });
+
+    ee.on("hideFlacon", () => {
+      this.hideFlacon();
     });
   }
 
