@@ -1,4 +1,4 @@
-# Three.js Journey
+# Flacon à senteur
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
